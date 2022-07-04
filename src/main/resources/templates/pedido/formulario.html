@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+	<head th:replace="~{base :: head('Novo pedido')}"></head>
+	<body class="bg-light">
+		<div th:replace="~{base :: navbar}"></div>
+		<div class="container-fluid">
+			<div th:replace="~{base :: titulo('Novo pedido')}"></div>
+			<div class="container card mt-3">
+				<form th:object="${requisicaoNovoPedido}" class="card-body" th:action="@{/pedido/novo}" method="POST">
+					<div class="form-group mb-3">
+						<label for="nomeProduto">Produto</label>
+						<input th:field="*{nomeProduto}" class="form-control" placeholder="Nome do produto" th:errorclass="is-invalid" />
+						<div th:error="${nomeProduto}" class="invalid-feedback">
+							Prencha o campo!
+						</div>
+					</div>
+					<div class="form-group mb-3">
+						<label for="urlProduto">Url do produto</label>
+						<input th:field="*{urlProduto}" class="form-control" placeholder="Url da produto" th:errorclass="is-invalid" />
+						<div th:error="${urlProduto}" class="invalid-feedback">
+							Prencha o campo!
+						</div>
+					</div>
+					<div class="form-group mb-3">
+						<label for="urlImagem">Imagem</label>
+						<input th:field="*{urlImagem}" class="form-control" placeholder="Url da imagem" th:errorclass="is-invalid" />
+						<div th:error="${urlImagem}" class="invalid-feedback">
+							Prencha o campo!
+						</div>
+					</div>
+					<div class="form-group mb-3">
+						<label for="descricao">Descreva o produto</label>
+						<textarea th:errorclass="is-invalid" th:field="*{descricao}" class="form-control mt-3" style="overflow:hidden; resize:none; height : 20px" oninput='this.style.height = this.scrollHeight + "px"'></textarea>
+						<div th:error="${descricao}" class="invalid-feedback">
+							Prencha o campo!
+						</div>
+					</div>
+					<button class="btn btn-primary btn-lg btn-block" type="submit">Cadastrar</button>
+				</form>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head th:replace="~{base :: head('Ofertas')}"></head>
+<body class="bg-light" onload="onLoad()">
+	<div th:replace="~{base :: navbar}"></div>
+	<div class="container" id="ofertas">
+		<div th:replace="~{base :: titulo('Nova oferta')}"></div>
+		<div v-for="pedido in pedidos">
+			<div v-if="!pedido.ofertaEnviada" class="card mb-3 mt-2">
+				<div class="card-header text-center alert alert-warning"> <a class="nav-link" v-bind:href="pedido.urlProduto">{{pedido.nomeProduto}}</a></div>
+				<div class="card-body">
+					<div class="row">
+						<div class="col-sm-12 col-lg-8 mb-3">
+							<div>
+								
+							</div>
+							<div>
+								<label>Descricao</label>
+								<textarea class="form-control" style="overflow:hidden; resize:none; height : 61px" onmouseleave='this.style.height = 61 + "px"' onmouseover='this.style.height = this.scrollHeight + "px"' readonly>{{pedido.descricao}}</textarea>
+							</div>
+							<div class="mt-3">
+								<div class="col-md-3">
+									Valor <input v-model="pedido.valorNegociado" class="form-control" v-bind:class="{ 'is-invalid': pedido.erros.valor !=='' }"/>
+									<div v-if=" pedido.erros.valor" class="invalid-feedback">{{pedido.erros.valor}}</div>
+								</div>
+								<div class="col-md-3 mt-3">
+									Data da entrega <input v-model="pedido.dataEntrega" class="form-control" v-bind:class="{ 'is-invalid': pedido.erros.dataEntrega !=='' }"/>
+									<div v-if=" pedido.erros.valor" class="invalid-feedback">{{pedido.erros.dataEntrega}}</div>
+								</div>
+								<label>Comentario</label>
+								<textarea v-model="pedido.comentario" class="form-control mt-3" style="overflow:hidden; resize:none; height : 20px" oninput='this.style.height = this.scrollHeight + "px"'></textarea>
+							</div>
+							<button hidden class="btn btn-primary col-12 btn-block mt-3">Oferta enviada</button>
+							<button v-on:click="eviarOferta(pedido)" class="btn btn-primary col-12 btn-block mt-3">Cadastrar</button>
+						</div>
+						<div class="col-sm-12- col-lg-4 d-flex">
+							<img v-bind:src="pedido.urlImagem" class="img-thumbnail card-img-top" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		function onLoad() 
+		{
+			var app = new Vue({
+				el : '#ofertas',
+				
+				data : 
+				{
+						pedidos : []
+				},
+				mounted () {
+					axios
+						.get('http://localhost:8080/api/pedidos/aguardando')
+						.then(response => 
+						{
+							this.pedidos = response.data
+						 	this.pedidos.forEach(pedido => 
+							{
+								pedido.ofertaEnviada = false;
+								pedido.erros = {
+									valor: '',
+									dataEntrega: '',
+								}
+							});
+						});
+				},
+				methods: 
+				{
+					eviarOferta: function(pedido) 
+					{
+						pedido.erros = {
+								valor: '',
+								dataEntrega: '',
+						}
+						
+						axios
+							.post('http://localhost:8080/api/ofertas/nova', {
+								pedidoId: pedido.id,
+								valor: pedido.valorNegociado,
+								dataEntrega: pedido.dataEntrega,
+								comentario: pedido.comentario
+							} )
+							.then(response => (pedido.ofertaEnviada = true))
+							.catch(error => {
+								erros = error.response.data.errors
+								console.log(erros)
+
+								erros.forEach(erro => pedido.erros[erro.field] = erro.defaultMessage);
+							});
+						console.log(pedido)
+					
+					}
+				}
+			});
+		}
+	</script>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.7.0"></script>
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</body>
+</html>

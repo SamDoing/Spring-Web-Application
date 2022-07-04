@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR"	>
+	<head th:replace="~{base :: head('Todos os pedido')}"></head>
+	<body class="bg-light">
+		<div th:replace="~{base :: navbar}"></div>
+		<div class="container-fluid">
+			<div th:replace="~{base :: titulo('Ultimos pedidos entregues')}"></div>
+			<div class="card mb-3 mt-2" th:each="pedido : ${pedidos}">
+				<div class="card-header text-center alert alert-success" th:text="${pedido.nomeProduto}"> Nome do produto</div>
+				<div class="card-body">
+					<div class="row">
+						<div class="col-sm-12 col-lg-8 mb-3">
+							<div>Produto</div>
+							<div><input class="form-control" value="url do produto" th:value="${pedido.urlProduto}"/></div>
+							<div>
+								<label>Descricao</label>
+								<textarea class="form-control" rows="3" th:text="${pedido.descricao}">Descricao do produto</textarea>
+							</div>
+							<div class="row align-self-end">
+								<div class="col-md-5">Valor: <span th:text="${pedido.valorNegociado}">200,99</span> </div>
+								<div class="col-md-7">Data da entrega <span th:text="${pedido.dataEntrega}">10/10/2009</span> </div>
+							</div>
+						</div>
+						<div class="col-sm-12- col-lg-4">
+							<img src="" class="img-thumbnail card-img-top" th:src="${pedido.urlImagem}">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

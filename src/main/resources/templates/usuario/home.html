@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR"	>
+	<head th:replace="~{base :: head('Pedidos')}"></head>
+	<body class="bg-light">
+		<div th:replace="~{base :: navbar}"></div>
+		<div class="container">
+			<div th:replace="~{base :: titulo('Meus pedidos')}"></div>
+			
+			<nav class="navbar navbar-expand-sm navbar-light bg-light d-flex justify-content-between align-items-end mb-1">
+				<div class="navbar-nav">
+					<a th:classappend="${status} ==  null		 ? 'active'" class="nav-item nav-link" th:href="@{/usuario/home}">Todos</a>
+					<a th:classappend="${status} == 'aguardando' ? 'active'" class="nav-item nav-link" th:href="@{/usuario/pedido/aguardando}">Aguardando</a>
+					<a th:classappend="${status} == 'aprovado'   ? 'active'" class="nav-item nav-link" th:href="@{/usuario/pedido/aprovado}">Aprovado</a>
+					<a th:classappend="${status} == 'entregue'   ? 'active'" class="nav-item nav-link" th:href="@{/usuario/pedido/entregue}">Entregue</a>
+				</div>
+				<a href="/pedido/formulario">
+					<button class="btn btn-outline-secondary my-2 my-sm-0 align-bottom">Novo</button>
+				</a>
+			</nav>
+			<div class="card mb-3" th:each="pedido : ${pedidos}">
+				<th:block th:switch="${pedido.status.name()}">
+				<div th:case="AGUARDANDO" class="card-header text-center alert alert-warning" th:text="${pedido.nomeProduto}"> Nome do produto</div>
+				<div th:case="APROVADO" class="card-header text-center alert alert-info" th:text="${pedido.nomeProduto}"> Nome do produto</div>
+				<div th:case="ENTREGUE" class="card-header text-center alert alert-success" th:text="${pedido.nomeProduto}"> Nome do produto</div>
+				
+				<div class="card-body">
+					<div class="row">
+						<div class="col-sm-12 col-lg-8 mb-3">
+							<div>Produto</div>
+							<div><input class="form-control" value="url do produto" th:value="${pedido.urlProduto}"/></div>
+							<div>
+								<label>Descricao</label>
+								<textarea class="form-control" style="overflow:hidden; resize:none; height : 61px" onmouseleave='this.style.height = 61 + "px"' onmouseover='this.style.height = this.scrollHeight + "px"' readonly th:text="${pedido.descricao}">Descricao do produto</textarea>
+							</div>
+							<div class="row align-self-end">
+								<div class="col-md-5">Valor: <span th:text="${pedido.valorNegociado}">200,99</span> </div>
+								<div class="col-md-7">Data da entrega <span th:text="${pedido.dataEntrega}">10/10/2009</span> </div>
+							</div>
+						</div>
+						<div class="col-sm-12- col-lg-4">
+							<img src="" class="img-thumbnail card-img-top" th:src="${pedido.urlImagem}">
+						</div>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
