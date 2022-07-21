@@ -57,7 +57,7 @@ public class PedidoRest {
 	}
 	
 	@PostMapping("novo")
-	public Pedido poostPedido(@Validated @RequestBody RequisicaoNovoPedido novoPedido, BindingResult result) {
+	public Pedido postPedido(@Validated @RequestBody RequisicaoNovoPedido novoPedido, BindingResult result) {
 		
 		if( result.hasErrors() ) return null;
 		
